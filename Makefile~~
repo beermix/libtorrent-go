@@ -4,7 +4,7 @@ CC = cc
 CXX = c++
 PKG_CONFIG = pkg-config
 DOCKER = docker
-DOCKER_IMAGE = beermix/$(NAME)
+DOCKER_IMAGE = anteo/$(NAME)
 PLATFORMS = android-arm \
 			darwin-x64 \
 			linux-x86 \

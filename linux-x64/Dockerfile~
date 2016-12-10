@@ -1,4 +1,4 @@
-FROM beermix/cross-compiler:linux-x64
+FROM anteo/cross-compiler:linux-x64
 MAINTAINER Anton Argirov "anton.argirov@gmail.com"
 
 RUN mkdir -p /build
