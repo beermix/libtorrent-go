@@ -1,18 +1,18 @@
-FROM anteo/cross-compiler:linux-x86
+FROM i386/alpine
 MAINTAINER Anton Argirov "anton.argirov@gmail.com"
 
 RUN mkdir -p /build
 WORKDIR /build
 
-# Install Boost.System
-ENV BOOST_VERSION 1.58.0
-RUN curl -L http://sourceforge.net/projects/boost/files/boost/${BOOST_VERSION}/boost_`echo ${BOOST_VERSION} | sed 's/\\./_/g'`.tar.bz2/download | tar xvj && \
-    cd boost_`echo ${BOOST_VERSION} | sed 's/\\./_/g'`/ && \
-    ./bootstrap.sh --prefix=${CROSS_ROOT} && \
-    echo "using gcc : linux : ${CROSS_TRIPLE}-c++ ;" > ${HOME}/user-config.jam && \
-    ./b2 --with-date_time --with-system --prefix=${CROSS_ROOT} toolset=gcc-linux link=static variant=release threading=multi target-os=linux install && \
-    rm -rf ${HOME}/user-config.jam && \
-    rm -rf `pwd`
+RUN apk update && apk upgrade && apk add git nano autoconf build-base curl libtool linux-headers openssl-dev pcre-dev tar go-bootstrap bash curl mc nano
+
+ENV GO_VERSION go1.7.4
+RUN cd /usr/local && \
+    curl -L https://github.com/golang/go/archive/${GO_VERSION}.tar.gz | tar xvz
+RUN cd /usr/local/go-${GO_VERSION}/src && \
+	echo ${GO_VERSION} > /usr/local/go-${GO_VERSION}/VERSION && \
+    GOROOT_BOOTSTRAP=/usr/lib/go-bootstrap GOOS=linux GOARCH=386 CGO_ENABLED=1 exec -m32 ./make.bash --no-banner
+ENV PATH ${PATH}:/usr/local/go-${GO_VERSION}/bin
 
 # Install OpenSSL
 ENV OPENSSL_VERSION 1.0.2d
